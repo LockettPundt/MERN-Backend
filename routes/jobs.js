@@ -21,17 +21,13 @@ router.post('/', async (req, res) => {
   const {
     company, position, applicationDate, interview, skillsNeeded,
   } = req.body;
-  const errorMessage = {
-    company: false,
-    position: false,
-    interview: false,
-  };
+
   const job = new JobsModel({
     company,
     position,
     skillsNeeded: skillsNeeded || 'N/A',
     interview,
-    applicationDate: applicationDate ? moment(applicationDate).format('MM/DD/YY') : moment().toNow(),
+    applicationDate,
   });
 
   try {
