@@ -11,7 +11,7 @@ const JobsModel = require('../models/JobsModel');
 router.get('/', async (req, res) => {
   const testingOneTwo = await JobsModel.find();
   console.log(testingOneTwo);
-  console.log(moment(testingOneTwo[0].applicationDate).format('LLL'));
+  console.log(moment(testingOneTwo[testingOneTwo.length - 1].applicationDate).format('MM/DD/YY'));
   res.json(testingOneTwo);
 });
 
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     position,
     skillsNeeded,
     interview,
-    applicationDate: moment(applicationDate).format('LLL'),
+    applicationDate: moment(applicationDate).format('MM/DD/YY'),
   });
 
   try {
