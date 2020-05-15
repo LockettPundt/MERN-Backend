@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -6,9 +7,18 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const addJob = require('./routes/addjob');
+const jobsRouter = require('./routes/jobs');
 
 require('dotenv').config();
+
+mongoose.connect(process.env.DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  dbName: process.env.DB_NAME,
+})
+  .then(() => console.log('connected'))
+  .catch((err) => console.log(err));
+
 
 const app = express();
 
@@ -22,6 +32,6 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/addjob', addJob);
+app.use('/jobs', jobsRouter);
 
 module.exports = app;
