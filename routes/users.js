@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -53,8 +54,29 @@ router.post('/register', async (req, res) => {
 
 // User Log In.
 
-router.post('/login', async (req, res) => {
-  res.sendStatus(200);
+router.put('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const fetchUserInfo = await UserModel.findOne({ email });
+    console.log(fetchUserInfo);
+    if (!validator.isEmail(email)) {
+      res.send('Enter a valid email');
+    }
+    if (fetchUserInfo) {
+      const match = bcrypt.compareSync(password, fetchUserInfo.password);
+
+      if (match) {
+        // JWT to be created and sent here.
+        console.log('Success');
+        res.send('YAY! You did it!');
+      } else {
+        res.send('Incorrect Password');
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
+  }
 });
 
 module.exports = router;
