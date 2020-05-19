@@ -11,8 +11,11 @@ const router = express.Router();
 
 const UserModel = require('../models/UserModel');
 
-router.get('/', (req, res) => {
-  res.send('User log in page.');
+router.get('/', async (req, res) => {
+  const { userEmail } = req.body;
+  const user = await UserModel.findOne({ email: userEmail });
+
+  res.json(user);
 });
 
 // User Registration.
@@ -31,14 +34,14 @@ router.post('/register', async (req, res) => {
       && !checkEmailExists) {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
-      const newUser = new UserModel({
+      const UserInfo = new UserModel({
         firstName,
         lastName,
         email,
         password: hash,
       });
-      const postUser = await newUser.save();
-      const token = jwt.sign({ newUser }, jwtSecret, { expiresIn: '1h' });
+      const postUser = await UserInfo.save();
+      const token = jwt.sign({ UserInfo }, jwtSecret, { expiresIn: '1h' });
       console.log(token);
       res.json({
         email,
