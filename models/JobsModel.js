@@ -19,6 +19,10 @@ const JobsModel = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  user: {
+    type: String,
+
+  },
 });
 
 
