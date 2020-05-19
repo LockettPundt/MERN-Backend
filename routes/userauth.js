@@ -21,7 +21,7 @@ const router = express.Router();
 // };
 
 router.post('/', (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const { userToken } = req.body;
   jwt.verify(userToken, jwtSecret, (err, authorizedData) => {
     if (err) {
@@ -29,7 +29,6 @@ router.post('/', (req, res) => {
       // console.log('ERROR: Could not connect to the protected route');
       res.sendStatus(403);
     } else {
-      // If token is successfully verified, we can send the autorized data
       res.json({
         message: 'Successful log in',
         authorizedData,
