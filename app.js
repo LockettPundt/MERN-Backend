@@ -9,7 +9,7 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const jobsRouter = require('./routes/jobs');
-
+const userAuth = require('./routes/userauth');
 
 require('dotenv').config();
 
@@ -35,5 +35,5 @@ app.use(bodyParser.json());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/jobs', jobsRouter);
-
+app.use('/userauth', userAuth);
 module.exports = app;
