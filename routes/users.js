@@ -3,7 +3,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
+const jwtSecret = process.env.JWT_SECRET;
 const router = express.Router();
 
 const UserModel = require('../models/UserModel');
@@ -35,16 +38,21 @@ router.post('/register', async (req, res) => {
         password: hash,
       });
       const postUser = await newUser.save();
-      res.sendStatus(200);
+      const token = jwt.sign({ newUser }, jwtSecret, { expiresIn: '1h' });
+      console.log(token);
+      res.json({
+        email,
+        token,
+      });
     }
     if (!validator.isEmail(email)) {
-      res.send('Enter a valid email address.');
+      res.json({ error: 'Enter a valid email address.' });
     }
     if (!validator.isLength(password, { min: 5, max: undefined })) {
-      res.send('Password must have 5 characters.');
+      res.json({ error: 'Password must have 5 characters.' });
     }
     if (checkEmailExists) {
-      res.send('This email is already taken.');
+      res.json({ error: 'This email is already taken.' });
     }
   } catch (error) {
     console.log(error);
@@ -57,25 +65,31 @@ router.post('/register', async (req, res) => {
 router.put('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const fetchUserInfo = await UserModel.findOne({ email });
-    console.log(fetchUserInfo);
+    const UserInfo = await UserModel.findOne({ email });
+    console.log(UserInfo);
     if (!validator.isEmail(email)) {
-      res.send('Enter a valid email');
+      res.json({ error: 'Enter a valid email' });
     }
-    if (fetchUserInfo) {
-      const match = bcrypt.compareSync(password, fetchUserInfo.password);
+    if (!UserInfo) {
+      res.json({ error: 'This is not a registered email.' });
+    }
+    if (UserInfo) {
+      const match = bcrypt.compareSync(password, UserInfo.password);
 
       if (match) {
-        // JWT to be created and sent here.
-        console.log('Success');
-        res.send('YAY! You did it!');
+        const token = jwt.sign({ UserInfo }, jwtSecret, { expiresIn: '1h' });
+        console.log(token);
+        res.json({
+          email,
+          token,
+        });
       } else {
-        res.send('Incorrect Password');
+        res.json({ error: 'Incorrect Password' });
       }
     }
   } catch (error) {
     console.log(error);
-    res.sendStatus(400);
+    // res.sendStatus(400);
   }
 });
 
