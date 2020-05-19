@@ -5,28 +5,30 @@ const moment = require('moment');
 const router = express.Router();
 const JobsModel = require('../models/JobsModel');
 
-// retrieve all jobs in DB.
+// retrieve all jobs posted by the user.
 
-router.get('/', async (req, res) => {
-  const testingOneTwo = await JobsModel.find();
-  console.log(testingOneTwo);
-  console.log(moment(testingOneTwo[testingOneTwo.length - 1].applicationDate).format('MM/DD/YY'));
-  res.json(testingOneTwo);
+router.post('/getjobs', async (req, res) => {
+  const { user } = req.body;
+
+  const userJobs = await JobsModel.find({ user });
+  // console.log(userJobs);
+  res.json(userJobs);
 });
 
 // Post new application to DB.
 
 router.post('/', async (req, res) => {
   const {
-    company, position, applicationDate, interview, skillsNeeded,
+    company, position, applicationDate, interview, skillsNeeded, user,
   } = req.body;
-
+  // console.log(user);
   const job = new JobsModel({
     company,
     position,
     skillsNeeded: skillsNeeded || 'N/A',
     interview,
     applicationDate,
+    user,
   });
 
   try {
