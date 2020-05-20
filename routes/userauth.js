@@ -21,19 +21,19 @@ const router = express.Router();
 // };
 
 router.post('/', (req, res) => {
-  console.log(req.body);
+  console.log('this is the auth.', req.body.userToken);
   const { userToken } = req.body;
   jwt.verify(userToken, jwtSecret, (err, authorizedData) => {
     if (err) {
       // If error send Forbidden (403)
-      // console.log('ERROR: Could not connect to the protected route');
+      console.log('ERROR: Could not connect to the protected route');
       res.sendStatus(403);
     } else {
       res.json({
         message: 'Successful log in',
         authorizedData,
       });
-      // console.log('SUCCESS: Connected to protected route');
+      console.log('SUCCESS: Connected to protected route');
     }
   });
 });
