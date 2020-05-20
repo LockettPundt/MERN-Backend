@@ -11,8 +11,8 @@ const JobsModel = new mongoose.Schema({
     required: true,
   },
   applicationDate: {
-    type: Date,
-    default: Date.now,
+    type: String,
+    required: true,
   },
   skillsNeeded: [String],
   interview: {
