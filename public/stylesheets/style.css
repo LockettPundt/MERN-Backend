@@ -1,8 +1,17 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+html {
+  color: "pink";
 }
 
-a {
-  color: #00B7FF;
+
+body {
+  color: #FFC0CB;
+  padding: 50px;
+  background-color: rgb(29, 29, 29);
+  font-family: Helvetica;
+  
+}
+
+a, a:visited, a:hover, a:active {
+  text-decoration: none;
+  color: #F0F8FF;
 }
